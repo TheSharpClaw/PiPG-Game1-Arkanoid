@@ -40,7 +40,6 @@ namespace Arkanoid.Objects
             _texture = texture;
             State = state;
         }
-
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Color color = Color.Gray;
@@ -60,7 +59,7 @@ namespace Arkanoid.Objects
 
             spriteBatch.Draw(_texture, Rectangle, color);
         }
-
+        
         public override void Update(GameTime gameTime)
         {
             //TODO: Check collision and update State or destroy Block if(State == 1)
