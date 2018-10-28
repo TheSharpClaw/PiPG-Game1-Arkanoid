@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Arkanoid.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -15,11 +14,12 @@ namespace Arkanoid.States
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
-            var paddleTexture = _content.Load<Texture2D>("Objects/Paddle");
+            var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
+
             var blockTexture = _content.Load<Texture2D>("Objects/Block");
             var ballTexture = _content.Load<Texture2D>("Objects/Ball");
 
-            var paddle = new Paddle(paddleTexture) { Position = new Vector2(320, 450) };
+            var paddle = new Paddle(paddleTextureStandard, new Vector2(320, 450));
             var ball = new Ball(ballTexture) { Position = new Vector2(392, 434) };
 
             #region ToDestroy
@@ -39,6 +39,8 @@ namespace Arkanoid.States
             var block14 = new Block(blockTexture, 1) { Position = new Vector2(655, 70) };
             var block15 = new Block(blockTexture, 3) { Position = new Vector2(700, 70) };
             #endregion
+
+            #region Can'tBeDestroyed
             var block16 = new Block(blockTexture, 4) { Position = new Vector2(160, 100) };
             var block17 = new Block(blockTexture, 4) { Position = new Vector2(205, 100) };
             var block18 = new Block(blockTexture, 4) { Position = new Vector2(250, 100) };
@@ -49,9 +51,8 @@ namespace Arkanoid.States
             var block23 = new Block(blockTexture, 4) { Position = new Vector2(475, 100) };
             var block24 = new Block(blockTexture, 4) { Position = new Vector2(520, 100) };
             var block25 = new Block(blockTexture, 4) { Position = new Vector2(565, 100) };
-            #region Can'tBeDestroyed
-
             #endregion
+
             _components = new List<Component>()
             {
                 paddle,
