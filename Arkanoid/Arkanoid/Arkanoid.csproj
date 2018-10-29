@@ -47,11 +47,13 @@
     <Compile Include="Objects\Ball.cs" />
     <Compile Include="Objects\Block.cs" />
     <Compile Include="Objects\Paddle.cs" />
+    <Compile Include="Objects\ScoreBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\OptionsState.cs" />
     <Compile Include="States\GameState.cs" />
     <Compile Include="States\MenuState.cs" />
+    <Compile Include="States\SplashState.cs" />
     <Compile Include="States\State.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Arkanoid.Objects
 {
     public class Ball : Component
     {
         #region Fields
+        private float _directionX;
+        private float _directionY;
+        private Rectangle _oldRectangle;
+        private Vector2 _position;
+        private float _speed;
         private Texture2D _texture;
         #endregion
 
         #region Properties
-        public Vector2 Position { get; set; }
+        public float DirectionX { get => _directionX; set => _directionX = value; }
+
+        public float DirectionY { get => _directionY; set => _directionY = value; }
+
+        public Rectangle OldRectangle { get => _oldRectangle; }
+
+        public Vector2 Position { get => _position; set => _position = value; }
 
         public Rectangle Rectangle
         {
@@ -22,25 +31,54 @@ namespace Arkanoid.Objects
                 return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
             }
         }
+      
+        public float Speed { get => _speed; set => _speed = value; }  
         #endregion
 
         #region Methods
         public Ball(Texture2D texture)
         {
             _texture = texture;
+            DirectionX = (float)Math.Sqrt(2);
+            DirectionY = (float)Math.Sqrt(2);
+            Speed = 2;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {          
+        {
             spriteBatch.Draw(_texture, Rectangle, Color.White);
+        }
+
+        private void EdgeCollisions()
+        {
+            if (Position.X < 0)
+            {
+                DirectionX = DirectionX * -1;
+            }
+            if (Position.X > 801 - _texture.Width)
+            {
+                DirectionX = DirectionX * -1;
+            }
+            if (Position.Y < 0)
+            {
+                DirectionY = DirectionY * -1;
+            }
+            if (Position.Y > 481 - _texture.Height)
+            {
+                //Change to lose live or game over
+                DirectionY = DirectionY * -1;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            //TODO: 1. Changing ball speed after 20 collisions (speeding up), 
-            //      2. Add ball movement, 
-            //      3. Deleting ball after colliding with bottom of screen.
+            _oldRectangle = Rectangle;
+
+            Position = new Vector2(Position.X + (DirectionX * _speed), Position.Y + (DirectionY * _speed));
+            EdgeCollisions();
         }
+
+        
         #endregion
     }
 }

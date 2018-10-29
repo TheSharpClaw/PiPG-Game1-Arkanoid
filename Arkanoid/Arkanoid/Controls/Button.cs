@@ -20,8 +20,6 @@ namespace Arkanoid.Controls
 
         public bool IsClicked { get; set; }
 
-        public Color PenColor { get; set; }
-
         public Vector2 Position { get; set; }
 
         public Rectangle Rectangle
@@ -33,6 +31,8 @@ namespace Arkanoid.Controls
         }
 
         public string Text { get; set; }
+
+        public Color TextColor { get; set; }
         #endregion
 
         #region Methods
@@ -40,7 +40,7 @@ namespace Arkanoid.Controls
         {
             _texture = texture;
             _font = font;
-            PenColor = Color.Black;
+            TextColor = Color.Black;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -60,7 +60,7 @@ namespace Arkanoid.Controls
                 var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
                 var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
 
-                spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColor);
+                spriteBatch.DrawString(_font, Text, new Vector2(x, y), TextColor);
             }
         }
 
