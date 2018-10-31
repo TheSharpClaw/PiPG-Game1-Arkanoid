@@ -42,12 +42,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Component.cs" />
+    <Compile Include="Controls\Background.cs" />
     <Compile Include="Controls\Button.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Objects\Ball.cs" />
     <Compile Include="Objects\Block.cs" />
     <Compile Include="Objects\Paddle.cs" />
-    <Compile Include="Objects\ScoreBox.cs" />
+    <Compile Include="Objects\TextBox.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="States\OptionsState.cs" />

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Arkanoid.Objects
 {
-    public class ScoreBox : Component
+    public class TextBox : Component
     {
         #region Fields
         private SpriteFont _font;
@@ -30,7 +30,7 @@ namespace Arkanoid.Objects
         #endregion
 
         #region Methods
-        public ScoreBox(Texture2D texture, SpriteFont font)
+        public TextBox(Texture2D texture, SpriteFont font)
         {
             _texture = texture;
             _font = font;

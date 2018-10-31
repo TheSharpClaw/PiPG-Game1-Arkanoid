@@ -9,52 +9,12 @@ namespace Arkanoid.States
 {
     public class MenuState : State
     {
+        #region Fields
         private List<Component> _components;
         private SpriteFont _font;
+        #endregion
 
-        public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
-            : base(game, graphicsDevice, content)
-        {
-            var buttonTexture = _content.Load<Texture2D>("Controls/Button");
-            _font = _content.Load<SpriteFont>("Fonts/Font");
-
-            var newGameButton = new Button(buttonTexture, _font)
-            {
-                Position = new Vector2(300, 130),
-                Text = "New Game",
-            };
-            newGameButton.Click += NewGameButton_Click;
-
-            var loadGameButton = new Button(buttonTexture, _font)
-            {
-                Position = new Vector2(300, 180),
-                Text = "Load Game",
-            };
-            loadGameButton.Click += LoadGameButton_Click;
-
-            var optionsButton = new Button(buttonTexture, _font)
-            {
-                Position = new Vector2(300, 230),
-                Text = "Options",
-            };
-            optionsButton.Click += OptionsButton_Click;
-
-            var quitButton = new Button(buttonTexture, _font)
-            {
-                Position = new Vector2(300, 280),
-                Text = "Quit",
-            };
-            quitButton.Click += QuitButton_Click;
-
-            _components = new List<Component>()
-            {
-                newGameButton,
-                loadGameButton,
-                optionsButton,
-                quitButton,
-            };
-        }
-
+        #region Methods
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -68,6 +28,53 @@ namespace Arkanoid.States
         private void LoadGameButton_Click(object sender, EventArgs e)
         {
             //Load Game
+        }
+
+        public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
+            : base(game, graphicsDevice, content)
+        {
+            var mainMenuBackgroundTexture = _content.Load<Texture2D>("Backgrounds/MainMenuBackground");
+            Background mainMenuBackground = new Background(mainMenuBackgroundTexture);
+
+            var buttonTexture = _content.Load<Texture2D>("Controls/Button");
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
+            var newGameButton = new Button(buttonTexture, _font)
+            {
+                Position = new Vector2(210, 300),
+                Text = "New Game",
+            };
+            newGameButton.Click += NewGameButton_Click;
+
+            var loadGameButton = new Button(buttonTexture, _font)
+            {
+                Position = new Vector2(210, 350),
+                Text = "Load Game",
+            };
+            loadGameButton.Click += LoadGameButton_Click;
+
+            var optionsButton = new Button(buttonTexture, _font)
+            {
+                Position = new Vector2(210, 400),
+                Text = "Options",
+            };
+            optionsButton.Click += OptionsButton_Click;
+
+            var quitButton = new Button(buttonTexture, _font)
+            {
+                Position = new Vector2(210, 450),
+                Text = "Quit",
+            };
+            quitButton.Click += QuitButton_Click;
+
+            _components = new List<Component>()
+            {
+                mainMenuBackground,
+                newGameButton,
+                loadGameButton,
+                optionsButton,
+                quitButton,
+            };
         }
 
         private void NewGameButton_Click(object sender, EventArgs e)
@@ -95,5 +102,6 @@ namespace Arkanoid.States
         {
             _game.Exit();
         }
+        #endregion
     }
 }

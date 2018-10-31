@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Arkanoid.Controls;
 using Arkanoid.Objects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -11,7 +12,7 @@ namespace Arkanoid.States
     {
         #region Fields
         private List<Component> _components;
-        private ScoreBox _scoreBox;
+        private Background _gameStateBackground;
         private Ball _ball;
         private Paddle _paddle;
         private List<Block> _listOfBlocks = new List<Block> { };
@@ -100,24 +101,20 @@ namespace Arkanoid.States
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
+            var gameStateBackgroundTexture = _content.Load<Texture2D>("Backgrounds/GameStateBackground");
+            _gameStateBackground = new Background(gameStateBackgroundTexture);
+
             var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
-            _paddle = new Paddle(paddleTextureStandard, new Vector2(320, 450));
+            _paddle = new Paddle(paddleTextureStandard, new Vector2(200, 660));
 
             var ballTexture = _content.Load<Texture2D>("Objects/Ball");
             _ball = new Ball(ballTexture)
-            { Position = new Vector2(392, 434) };
-
-            //Need new texture
-            var scoreBoxTexture = _content.Load<Texture2D>("Controls/Button");
-            var scoreBoxFont = _content.Load<SpriteFont>("Fonts/Font");
-            _scoreBox = new ScoreBox(scoreBoxTexture, scoreBoxFont)
-            { Position = new Vector2(795 - scoreBoxTexture.Width, 5) };
-            
+            { Position = new Vector2(262, 644) };         
 
             var blockTexture = _content.Load<Texture2D>("Objects/Block");
             #region ToDestroy
-            var block1 = new Block(blockTexture, 1) { Position = new Vector2(70, 70) }; _listOfBlocks.Add(block1);
-            var block2 = new Block(blockTexture, 1) { Position = new Vector2(115, 70) }; _listOfBlocks.Add(block2);
+            var block1 = new Block(blockTexture, 1) { Position = new Vector2(100, 180) }; _listOfBlocks.Add(block1);
+            var block2 = new Block(blockTexture, 1) { Position = new Vector2(140, 180) }; _listOfBlocks.Add(block2);
             //var block3 = new Block(blockTexture, 2) { Position = new Vector2(160, 70) }; _listOfBlocks.Add(block3);
             //var block4 = new Block(blockTexture, 3) { Position = new Vector2(205, 70) }; _listOfBlocks.Add(block4);
             //var block5 = new Block(blockTexture, 2) { Position = new Vector2(250, 70) }; _listOfBlocks.Add(block5);
@@ -133,24 +130,25 @@ namespace Arkanoid.States
             //var block15 = new Block(blockTexture, 3) { Position = new Vector2(700, 70) }; _listOfBlocks.Add(block15);
             #endregion
             #region Can'tBeDestroyed
-            var block16 = new Block(blockTexture, 4) { Position = new Vector2(160, 100) }; _listOfBlocks.Add(block16);
-            var block17 = new Block(blockTexture, 4) { Position = new Vector2(205, 100) }; _listOfBlocks.Add(block17);
-            var block18 = new Block(blockTexture, 4) { Position = new Vector2(250, 100) }; _listOfBlocks.Add(block18);
-            var block19 = new Block(blockTexture, 4) { Position = new Vector2(295, 100) }; _listOfBlocks.Add(block19);
-            var block20 = new Block(blockTexture, 4) { Position = new Vector2(340, 100) }; _listOfBlocks.Add(block20);
-            var block21 = new Block(blockTexture, 4) { Position = new Vector2(385, 100) }; _listOfBlocks.Add(block21);
-            var block22 = new Block(blockTexture, 4) { Position = new Vector2(430, 100) }; _listOfBlocks.Add(block22);
-            var block23 = new Block(blockTexture, 4) { Position = new Vector2(475, 100) }; _listOfBlocks.Add(block23);
-            var block24 = new Block(blockTexture, 4) { Position = new Vector2(520, 100) }; _listOfBlocks.Add(block24);
-            var block25 = new Block(blockTexture, 4) { Position = new Vector2(565, 100) }; _listOfBlocks.Add(block25);
+            var block16 = new Block(blockTexture, 4) { Position = new Vector2(100, 200) }; _listOfBlocks.Add(block16);
+            var block17 = new Block(blockTexture, 4) { Position = new Vector2(140, 200) }; _listOfBlocks.Add(block17);
+            var block18 = new Block(blockTexture, 4) { Position = new Vector2(180, 200) }; _listOfBlocks.Add(block18);
+            var block19 = new Block(blockTexture, 4) { Position = new Vector2(220, 200) }; _listOfBlocks.Add(block19);
+            var block20 = new Block(blockTexture, 4) { Position = new Vector2(260, 200) }; _listOfBlocks.Add(block20);
+            var block21 = new Block(blockTexture, 4) { Position = new Vector2(300, 200) }; _listOfBlocks.Add(block21);
+            var block22 = new Block(blockTexture, 4) { Position = new Vector2(340, 200) }; _listOfBlocks.Add(block22);
+            var block23 = new Block(blockTexture, 4) { Position = new Vector2(380, 200) }; _listOfBlocks.Add(block23);
+            var block24 = new Block(blockTexture, 4) { Position = new Vector2(420, 200) }; _listOfBlocks.Add(block24);
+            var block25 = new Block(blockTexture, 4) { Position = new Vector2(460, 200) }; _listOfBlocks.Add(block25);
+            var block26 = new Block(blockTexture, 4) { Position = new Vector2(500, 200) }; _listOfBlocks.Add(block26);
             #endregion
             _listOfBlocksToDelete = new List<Block> { };
 
             _components = new List<Component>()
             {
+                _gameStateBackground,
                 _paddle,
                 _ball,
-                _scoreBox,
             };
 
         } 

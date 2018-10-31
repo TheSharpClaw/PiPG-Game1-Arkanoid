@@ -44,14 +44,14 @@ namespace Arkanoid.Objects
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
                 _position.X = Position.X - Speed;
   
-            if (Position.X < 0)
-                _position.X = 0;
+            if (Position.X < 20)
+                _position.X = 20;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
                 _position.X = Position.X + Speed;
 
-            if (Position.X > 800 - _currentTexture.Width)
-                _position.X = 800 - _currentTexture.Width;            
+            if (Position.X > 540 - _currentTexture.Width)
+                _position.X = 540 - _currentTexture.Width;            
         }
 
         public override void Update(GameTime gameTime)

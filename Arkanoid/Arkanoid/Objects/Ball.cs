@@ -51,19 +51,19 @@ namespace Arkanoid.Objects
 
         private void EdgeCollisions()
         {
-            if (Position.X < 0)
+            if (Position.X < 20)
             {
                 DirectionX = DirectionX * -1;
             }
-            if (Position.X > 801 - _texture.Width)
+            if (Position.X > 541 - _texture.Width)
             {
                 DirectionX = DirectionX * -1;
             }
-            if (Position.Y < 0)
+            if (Position.Y < 120)
             {
                 DirectionY = DirectionY * -1;
             }
-            if (Position.Y > 481 - _texture.Height)
+            if (Position.Y > 681 - _texture.Height)
             {
                 //Change to lose live or game over
                 DirectionY = DirectionY * -1;

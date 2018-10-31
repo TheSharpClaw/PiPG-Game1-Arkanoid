@@ -25,46 +25,50 @@ namespace Arkanoid.States
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) 
             : base(game, graphicsDevice, content)
         {
+            var mainMenuBackgroundTexture = _content.Load<Texture2D>("Backgrounds/MainMenuBackground");
+            Background mainMenuBackground = new Background(mainMenuBackgroundTexture);
+
             var buttonTexture = _content.Load<Texture2D>("Controls/Button");
             _font = _content.Load<SpriteFont>("Fonts/Font");
 
             _easyButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(175, 150),
+                Position = new Vector2(55, 330),
                 Text = "Easy",
             };
             _easyButton.Click += EasyButton_Click;
 
             _mediumButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(330, 150),
+                Position = new Vector2(210, 330),
                 Text = "Medium",
             };
             _mediumButton.Click += MediumButton_Click;
 
             _hardButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(485, 150),
+                Position = new Vector2(365, 330),
                 Text = "Hard",
             };
             _hardButton.Click += HardButton_Click;
 
             _cancelButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(255, 400),
+                Position = new Vector2(135, 450),
                 Text = "Cancel",
             };
             _cancelButton.Click += CancelButton_Click;
 
             _saveButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(405, 400),
+                Position = new Vector2(285, 450),
                 Text = "Save",
             };
             _saveButton.Click += SaveButton_Click;
 
             _components = new List<Component>()
             {
+                mainMenuBackground,
                 _easyButton,
                 _mediumButton,
                 _hardButton,
@@ -82,10 +86,10 @@ namespace Arkanoid.States
         {
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_font, "AI Difficulty", new Vector2(175, 120), Color.Black);
-
             foreach (var component in _components)
                 component.Draw(gameTime, spriteBatch);
+
+            spriteBatch.DrawString(_font, "AI Difficulty", new Vector2(60, 310), Color.White);
 
             spriteBatch.End();
         }
