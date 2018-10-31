@@ -37,11 +37,13 @@ namespace Arkanoid.Objects
             _texture = texture;
             _state = 1;
         }
+
         public Block(Texture2D texture, int state)
         {
             _texture = texture;
             _state = state;
         }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _color = Color.Gray;
