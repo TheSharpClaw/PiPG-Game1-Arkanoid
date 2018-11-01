@@ -33,8 +33,8 @@ namespace Arkanoid.States
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
-            var mainMenuBackgroundTexture = _content.Load<Texture2D>("Backgrounds/MainMenuBackground");
-            Background mainMenuBackground = new Background(mainMenuBackgroundTexture);
+            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
+            Background background = new Background(backgroundTexture);
 
             var buttonTexture = _content.Load<Texture2D>("Controls/Button");
             _font = _content.Load<SpriteFont>("Fonts/Font");
@@ -69,7 +69,7 @@ namespace Arkanoid.States
 
             _components = new List<Component>()
             {
-                mainMenuBackground,
+                background,
                 newGameButton,
                 loadGameButton,
                 optionsButton,

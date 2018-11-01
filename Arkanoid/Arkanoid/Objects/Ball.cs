@@ -13,6 +13,7 @@ namespace Arkanoid.Objects
         private Vector2 _position;
         private float _speed;
         private Texture2D _texture;
+        bool _toDestroyFlag;
         #endregion
 
         #region Properties
@@ -32,7 +33,8 @@ namespace Arkanoid.Objects
             }
         }
       
-        public float Speed { get => _speed; set => _speed = value; }  
+        public float Speed { get => _speed; set => _speed = value; }
+        public bool ToDestroyFlag { get => _toDestroyFlag;}
         #endregion
 
         #region Methods
@@ -65,8 +67,7 @@ namespace Arkanoid.Objects
             }
             if (Position.Y > 681 - _texture.Height)
             {
-                //Change to lose live or game over
-                DirectionY = DirectionY * -1;
+                _toDestroyFlag = true;
             }
         }
 

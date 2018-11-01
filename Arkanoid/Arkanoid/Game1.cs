@@ -9,12 +9,15 @@ namespace Arkanoid
     /// </summary>
     public class Game1 : Game
     {
+        #region Fields
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         private State _currentState;
         private State _nextState;
+        #endregion
 
+        #region Methods
         public void ChangeState(State state)
         {
             _nextState = state;
@@ -54,7 +57,7 @@ namespace Arkanoid
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //change later to SplashState
-            _currentState = new MenuState(this, graphics.GraphicsDevice, Content);
+            _currentState = new SplashState(this, graphics.GraphicsDevice, Content);
         }
 
         /// <summary>
@@ -91,11 +94,10 @@ namespace Arkanoid
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
             _currentState.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime);
         }
+        #endregion
     }
 }

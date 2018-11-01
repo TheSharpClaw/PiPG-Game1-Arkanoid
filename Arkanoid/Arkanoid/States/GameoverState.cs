@@ -3,10 +3,11 @@ using Arkanoid.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Arkanoid.States
 {
-    public class VictoryState : State
+    public class GameoverState : State
     {
         #region Fields
         private List<Component> _components;
@@ -18,12 +19,23 @@ namespace Arkanoid.States
         #endregion
 
         #region Methods
+        private void CheckIfKeyPressed()
+        {
+            var keys = Keyboard.GetState().GetPressedKeys();
+
+            if (keys.Length > 0)
+                _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
 
             foreach (var component in _components)
                 component.Draw(gameTime, spriteBatch);
+
+            spriteBatch.DrawString(_font, "GAME OVER", new Vector2(110, 220), Color.White * _fontOpacity, 0, new Vector2(0,0), 3, SpriteEffects.None, 1);
+            spriteBatch.DrawString(_font, "Press any key to continue", new Vector2(50, 300), Color.White * _fontOpacity, 0, new Vector2(0, 0), 1.5f, SpriteEffects.None, 1);
 
             DrawScore(spriteBatch);
 
@@ -32,8 +44,6 @@ namespace Arkanoid.States
 
         private void DrawScore(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_font, "YOU WON!", new Vector2(130, 250), Color.White * _fontOpacity, 0, new Vector2(0, 0), 3, SpriteEffects.None, 1);
-
             spriteBatch.DrawString(_font, "Score", new Vector2(215, 400), Color.Red, 0, new Vector2(0, 0), 2, SpriteEffects.None, 1);
 
             if (_score > 9999)
@@ -58,14 +68,32 @@ namespace Arkanoid.States
             }
         }
 
+        public GameoverState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
+            : base(game, graphicsDevice, content)
+        {
+            _score = score;
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
+            _fontOpacity = 0;
+            _fontOpacityFlag = 0;
+
+            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
+            Background background = new Background(backgroundTexture);
+
+            _components = new List<Component>()
+            {
+                background,
+            };
+        }
+
         public override void PostUpdate(GameTime gameTime)
         {
-            
+
         }
 
         private void StringFlashing()
         {
-            if (_fontOpacityFlag >= 45)
+            if (_fontOpacityFlag >= 60)
             {
                 if (_fontOpacity == 1)
                     _fontOpacity = 0;
@@ -80,22 +108,7 @@ namespace Arkanoid.States
         public override void Update(GameTime gameTime)
         {
             StringFlashing();
-        }
-
-        public VictoryState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
-            : base(game, graphicsDevice, content)
-        {
-            _score = score;
-
-            _font = _content.Load<SpriteFont>("Fonts/Font");
-
-            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
-            Background background = new Background(backgroundTexture);
-
-            _components = new List<Component>()
-            {
-                background,
-            };
+            CheckIfKeyPressed();
         }
         #endregion
     }

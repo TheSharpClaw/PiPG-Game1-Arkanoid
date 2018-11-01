@@ -11,82 +11,116 @@ namespace Arkanoid.States
     public class GameState : State
     {
         #region Fields
+        private int _lifeCounter;
+        private int _score;
+        private SpriteFont _font;
         private List<Component> _components;
         private Background _gameStateBackground;
-        private Ball _ball;
         private Paddle _paddle;
+        private Texture2D _ballTexture;
+        private List<Ball> _listOfBalls = new List<Ball> { };
         private List<Block> _listOfBlocks = new List<Block> { };
-        private List<Block> _listOfBlocksToDelete = new List<Block> { };
         #endregion
 
         #region Methods 
-        private void CheckIfBallCollideWithAnyBlock()
+        private void CheckBalls()
         {
-            foreach(Block block in _listOfBlocks)
+            if (_listOfBalls.Count > 0)
             {
-                if (_ball.Rectangle.Intersects(block.Rectangle))
+                foreach (Ball ball in _listOfBalls)
                 {
-                    float distanceVertical;
-                    float distanceHorizontal;
-               
-                    //Ball comes from upper left
-                    if (_ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
-                        _ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
+                    if (ball.Position.Y > 680)
                     {
-                        distanceVertical = Math.Abs((block.Rectangle.Top - _ball.OldRectangle.Bottom) * _ball.DirectionY);
-                        distanceHorizontal = Math.Abs((block.Rectangle.Left - _ball.OldRectangle.Right) * _ball.DirectionX);  
-                    }
-                    //Ball comes from upper right
-                    else if (_ball.OldRectangle.Center.X >= block.Rectangle.Center.X &&
-                             _ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
-                    {
-                        distanceVertical = Math.Abs((block.Rectangle.Top - _ball.OldRectangle.Bottom) * _ball.DirectionY);
-                        distanceHorizontal = Math.Abs((_ball.OldRectangle.Left - block.Rectangle.Right) * _ball.DirectionX);
-                    }
-                    //Ball comes from bottom left
-                    else if (_ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
-                             _ball.OldRectangle.Center.Y >= block.Rectangle.Center.Y)
-                    {
-                        distanceVertical = Math.Abs((_ball.OldRectangle.Top - block.Rectangle.Bottom) * _ball.DirectionY);
-                        distanceHorizontal = Math.Abs((block.Rectangle.Left - _ball.OldRectangle.Right) * _ball.DirectionX);
-                    }
-                    //Ball comes from bottom right
-                    else
-                    {
-                        distanceVertical = Math.Abs((_ball.OldRectangle.Top - block.Rectangle.Bottom) * _ball.DirectionY);
-                        distanceHorizontal = Math.Abs((_ball.OldRectangle.Left - block.Rectangle.Right) * _ball.DirectionX);
-                    }
+                        _listOfBalls.Remove(ball);
 
-                    if (distanceVertical > distanceHorizontal)
-                        _ball.DirectionX = _ball.DirectionX * -1;
-                    else
-                        _ball.DirectionY = _ball.DirectionY * -1;
-
-                    if (block.State == 3)
-                        block.State = 2;
-                    else if (block.State == 2)
-                        block.State = 1;
-                    else if (block.State == 1)
-                        _listOfBlocks.Remove(block);
-                        
-                    break;
+                        _lifeCounter--;
+                        _paddle.Position = new Vector2(200, 660);
+                        _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
+                        break;
+                    }                    
                 }
+            }         
+        }
+
+        private void CheckIfBallsCollideWithAnyBlock()
+        {
+            foreach (Ball ball in _listOfBalls)
+            {
+                foreach (Block block in _listOfBlocks)
+                {
+                    if (ball.Rectangle.Intersects(block.Rectangle))
+                    {
+                        float distanceVertical;
+                        float distanceHorizontal;
+
+                        //Ball comes from upper left
+                        if (ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
+                            ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
+                        {
+                            distanceVertical = Math.Abs((block.Rectangle.Top - ball.OldRectangle.Bottom) * ball.DirectionY);
+                            distanceHorizontal = Math.Abs((block.Rectangle.Left - ball.OldRectangle.Right) * ball.DirectionX);
+                        }
+                        //Ball comes from upper right
+                        else if (ball.OldRectangle.Center.X >= block.Rectangle.Center.X &&
+                                 ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
+                        {
+                            distanceVertical = Math.Abs((block.Rectangle.Top - ball.OldRectangle.Bottom) * ball.DirectionY);
+                            distanceHorizontal = Math.Abs((ball.OldRectangle.Left - block.Rectangle.Right) * ball.DirectionX);
+                        }
+                        //Ball comes from bottom left
+                        else if (ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
+                                 ball.OldRectangle.Center.Y >= block.Rectangle.Center.Y)
+                        {
+                            distanceVertical = Math.Abs((ball.OldRectangle.Top - block.Rectangle.Bottom) * ball.DirectionY);
+                            distanceHorizontal = Math.Abs((block.Rectangle.Left - ball.OldRectangle.Right) * ball.DirectionX);
+                        }
+                        //Ball comes from bottom right
+                        else
+                        {
+                            distanceVertical = Math.Abs((ball.OldRectangle.Top - block.Rectangle.Bottom) * ball.DirectionY);
+                            distanceHorizontal = Math.Abs((ball.OldRectangle.Left - block.Rectangle.Right) * ball.DirectionX);
+                        }
+
+                        if (distanceVertical > distanceHorizontal)
+                            ball.DirectionX = ball.DirectionX * -1;
+                        else
+                            ball.DirectionY = ball.DirectionY * -1;
+
+                        if (block.State == 3)
+                            block.State = 2;
+                        else if (block.State == 2)
+                            block.State = 1;
+                        else if (block.State == 1)
+                        {
+                            _score += 40;
+                            _listOfBlocks.Remove(block);
+                        }
+
+                        _score += 10;
+
+                        break;
+                    }                  
+                }              
             }
         }
 
-        private void CheckIfBallCollideWithPaddle()
+        private void CheckIfBallsCollideWithPaddle()
         {
-            if (_ball.Rectangle.Intersects(_paddle.Rectangle))
+            foreach (Ball ball in _listOfBalls)
             {
-                _ball.DirectionY = Math.Abs(_ball.DirectionY) * -1;
-            }
+                if (ball.Rectangle.Intersects(_paddle.Rectangle))
+                {
+                    ball.DirectionY = Math.Abs(ball.DirectionY) * -1;
+                    _score += 10;
+                }
+            }        
         }
 
         private void CheckIfGameIsWon()
         {
             bool gameWonFlag = true;
 
-            foreach(Block block in _listOfBlocks)
+            foreach (Block block in _listOfBlocks)
             {
                 if (block.State != 4)
                 {
@@ -95,22 +129,32 @@ namespace Arkanoid.States
             }
 
             if (gameWonFlag)
-                _game.ChangeState(new VictoryState(_game, _graphicsDevice, _content));
+                _game.ChangeState(new VictoryState(_game, _graphicsDevice, _content, _score));
+        }
+
+        private void CheckIfGameOver()
+        {
+            if (_lifeCounter < 0)
+                _game.ChangeState(new GameoverState(_game, _graphicsDevice, _content, _score));
         }
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
+            _lifeCounter = 2;
+            _score = 0;
+
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
             var gameStateBackgroundTexture = _content.Load<Texture2D>("Backgrounds/GameStateBackground");
             _gameStateBackground = new Background(gameStateBackgroundTexture);
 
             var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
             _paddle = new Paddle(paddleTextureStandard, new Vector2(200, 660));
 
-            var ballTexture = _content.Load<Texture2D>("Objects/Ball");
-            _ball = new Ball(ballTexture)
-            { Position = new Vector2(262, 644) };         
-
+            _ballTexture = _content.Load<Texture2D>("Objects/Ball");
+            _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
+                
             var blockTexture = _content.Load<Texture2D>("Objects/Block");
             #region ToDestroy
             var block1 = new Block(blockTexture, 1) { Position = new Vector2(100, 180) }; _listOfBlocks.Add(block1);
@@ -142,13 +186,11 @@ namespace Arkanoid.States
             var block25 = new Block(blockTexture, 4) { Position = new Vector2(460, 200) }; _listOfBlocks.Add(block25);
             var block26 = new Block(blockTexture, 4) { Position = new Vector2(500, 200) }; _listOfBlocks.Add(block26);
             #endregion
-            _listOfBlocksToDelete = new List<Block> { };
 
             _components = new List<Component>()
             {
                 _gameStateBackground,
                 _paddle,
-                _ball,
             };
 
         } 
@@ -159,10 +201,60 @@ namespace Arkanoid.States
             foreach (var component in _components)
                 component.Draw(gameTime, spriteBatch);
 
+            DrawLifeCounter(spriteBatch);
+            DrawScore(spriteBatch);
+
+            foreach (Ball ball in _listOfBalls)
+                ball.Draw(gameTime, spriteBatch);
+
             foreach (Block block in _listOfBlocks)
                 block.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
+        }
+
+        private void DrawScore(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(_font, "Score", new Vector2(370, 28), Color.Red, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+
+            if (_score > 9999)
+            {
+                spriteBatch.DrawString(_font, _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else if (_score > 999)
+            {
+                spriteBatch.DrawString(_font, "0" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else if (_score > 99)
+            {
+                spriteBatch.DrawString(_font, "00" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else if (_score > 9)
+            {
+                spriteBatch.DrawString(_font, "000" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "0000" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+        }
+
+        private void DrawLifeCounter(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(_font, "1UP", new Vector2(90, 28), Color.Red, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+
+            if (_lifeCounter > 99)
+            {
+                spriteBatch.DrawString(_font, _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else if (_lifeCounter > 9)
+            {
+                spriteBatch.DrawString(_font, "0" + _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
+            else
+            {
+                spriteBatch.DrawString(_font, "00" + _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
+            }
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -175,11 +267,16 @@ namespace Arkanoid.States
             foreach (var component in _components)
                 component.Update(gameTime);
 
+            foreach (Ball ball in _listOfBalls)
+                ball.Update(gameTime);
+
             foreach (Block block in _listOfBlocks)
                 block.Update(gameTime);
 
-            CheckIfBallCollideWithPaddle();
-            CheckIfBallCollideWithAnyBlock();
+            CheckIfBallsCollideWithPaddle();
+            CheckIfBallsCollideWithAnyBlock();
+            CheckBalls();
+            CheckIfGameOver();
             CheckIfGameIsWon();
         }
 
