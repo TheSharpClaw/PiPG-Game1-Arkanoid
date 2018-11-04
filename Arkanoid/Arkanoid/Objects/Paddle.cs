@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -26,14 +25,16 @@ namespace Arkanoid.Objects
         public int Speed { get => _speed; set => _speed = value; }
         #endregion
 
-        #region Methods
+        #region Contructors
         public Paddle(Texture2D texture, Vector2 position)
         {
             _currentTexture = texture;
             Position = position;
             Speed = 5;
         }
+        #endregion
 
+        #region Methods
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_currentTexture, Rectangle, Color.White);

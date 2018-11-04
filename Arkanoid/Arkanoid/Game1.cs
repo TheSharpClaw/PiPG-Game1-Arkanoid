@@ -17,12 +17,7 @@ namespace Arkanoid
         private State _nextState;
         #endregion
 
-        #region Methods
-        public void ChangeState(State state)
-        {
-            _nextState = state;
-        }
-
+        #region Contructors
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -32,6 +27,13 @@ namespace Arkanoid
             graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
+        }
+        #endregion
+
+        #region Methods
+        public void ChangeState(State state)
+        {
+            _nextState = state;
         }
 
         /// <summary>

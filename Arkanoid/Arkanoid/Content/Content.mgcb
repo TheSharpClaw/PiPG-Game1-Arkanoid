@@ -68,6 +68,18 @@
 /processorParam:TextureFormat=Color
 /build:Objects/Ball.png
 
+#begin Objects/BallSpeedPowerUP.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Objects/BallSpeedPowerUP.png
+
 #begin Objects/Block.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -80,6 +92,30 @@
 /processorParam:TextureFormat=Color
 /build:Objects/Block.png
 
+#begin Objects/LifePowerUP.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Objects/LifePowerUP.png
+
+#begin Objects/PaddleSpeedPowerUP.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Objects/PaddleSpeedPowerUP.png
+
 #begin Objects/PaddleStandard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -91,6 +127,54 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Objects/PaddleStandard.png
+
+#begin SoundEffects/BallCollideWithDestructibleBlock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/BallCollideWithDestructibleBlock.wav
+
+#begin SoundEffects/BallCollideWithIndestructibleBlock.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/BallCollideWithIndestructibleBlock.wav
+
+#begin SoundEffects/BallCollideWithPaddle.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/BallCollideWithPaddle.wav
+
+#begin SoundEffects/GameOver.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/GameOver.ogg
+
+#begin SoundEffects/PaddleDestroy.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PaddleDestroy.wav
+
+#begin SoundEffects/PaddleShoot.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/PaddleShoot.wav
+
+#begin SoundEffects/RoundStart.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/RoundStart.ogg
+
+#begin SoundEffects/SplashScreenAndMainMenu.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/SplashScreenAndMainMenu.mp3
 
 #begin SplashScreen/SplashScreen1.png
 /importer:TextureImporter

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Arkanoid.States
 {
@@ -19,6 +21,30 @@ namespace Arkanoid.States
         private float _fontOpacity;
         private int _fontOpacityFlag;
         private float _increment;
+
+        private Song _splashScreenSong;
+        #endregion
+
+        #region Constructors
+        public SplashState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
+            : base(game, graphicsDevice, content)
+        {
+            _splash1 = content.Load<Texture2D>("SplashScreen/SplashScreen1");
+            _splash2 = content.Load<Texture2D>("SplashScreen/SplashScreen2");
+            _splash3 = content.Load<Texture2D>("SplashScreen/SplashScreen3");
+            _splash4 = content.Load<Texture2D>("SplashScreen/SplashScreen4");
+
+            _font = content.Load<SpriteFont>("Fonts/Font");
+
+            _opacity = 0;
+            _fontOpacity = 0;
+            _fontOpacityFlag = 0;
+            _increment = 0.0001f;
+
+            _splashScreenSong = content.Load<Song>("SoundEffects/SplashScreenAndMainMenu");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(_splashScreenSong);
+        }
         #endregion
 
         #region Methods
@@ -27,6 +53,7 @@ namespace Arkanoid.States
 
             if (_opacity == 1 && keys.Length > 0)
             {
+                MediaPlayer.IsRepeating = false;
                 _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));         
             }
             else if (keys.Length > 0)
@@ -53,22 +80,6 @@ namespace Arkanoid.States
         public override void PostUpdate(GameTime gameTime)
         {
             
-        }
-
-        public SplashState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
-            : base(game, graphicsDevice, content)
-        {
-            _splash1 = content.Load<Texture2D>("SplashScreen/SplashScreen1");
-            _splash2 = content.Load<Texture2D>("SplashScreen/SplashScreen2");
-            _splash3 = content.Load<Texture2D>("SplashScreen/SplashScreen3");
-            _splash4 = content.Load<Texture2D>("SplashScreen/SplashScreen4");
-
-            _font = content.Load<SpriteFont>("Fonts/Font");
-
-            _opacity = 0;
-            _fontOpacity = 0;
-            _fontOpacityFlag = 0;
-            _increment = 0.0001f;
         }
 
         private void SplashOpacityIncrementation()
@@ -105,7 +116,6 @@ namespace Arkanoid.States
         {
             CheckIfKeyPressed();
             SplashOpacityIncrementation();
-            
         }
         #endregion
     }

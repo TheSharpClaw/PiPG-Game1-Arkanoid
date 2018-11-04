@@ -6,20 +6,21 @@ namespace Arkanoid.Objects
 {
     public class Ball : Component
     {
-        #region Fields
-        private float _directionX;
-        private float _directionY;
+        #region Fields       
+        private double _directionX;
+        private double _directionY;
         private Rectangle _oldRectangle;
         private Vector2 _position;
-        private float _speed;
+        private double _speed;
+        private int _speedCounter;
         private Texture2D _texture;
         bool _toDestroyFlag;
         #endregion
 
         #region Properties
-        public float DirectionX { get => _directionX; set => _directionX = value; }
+        public double DirectionX { get => _directionX; set => _directionX = value; }
 
-        public float DirectionY { get => _directionY; set => _directionY = value; }
+        public double DirectionY { get => _directionY; set => _directionY = value; }
 
         public Rectangle OldRectangle { get => _oldRectangle; }
 
@@ -33,17 +34,31 @@ namespace Arkanoid.Objects
             }
         }
       
-        public float Speed { get => _speed; set => _speed = value; }
+        public double Speed { get => _speed; set => _speed = value; }
+
+        public int SpeedCounter { get => _speedCounter; set => _speedCounter = value; }
+
         public bool ToDestroyFlag { get => _toDestroyFlag;}
         #endregion
 
-        #region Methods
+        #region Constructors
         public Ball(Texture2D texture)
         {
             _texture = texture;
-            DirectionX = (float)Math.Sqrt(2);
-            DirectionY = (float)Math.Sqrt(2);
-            Speed = 2;
+            DirectionX = Math.Sqrt(2);
+            DirectionY = Math.Sqrt(2);
+            Speed = 5f;
+        }
+        #endregion
+
+        #region Methods
+        private void CheckBallSpeedCounter()
+        {
+            if (_speedCounter >= 10)
+            {
+                _speed += 0.5f;
+                _speedCounter = 0;
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -56,14 +71,17 @@ namespace Arkanoid.Objects
             if (Position.X < 20)
             {
                 DirectionX = DirectionX * -1;
+                _speedCounter++;
             }
             if (Position.X > 541 - _texture.Width)
             {
                 DirectionX = DirectionX * -1;
+                _speedCounter++;
             }
             if (Position.Y < 120)
             {
                 DirectionY = DirectionY * -1;
+                _speedCounter++;
             }
             if (Position.Y > 681 - _texture.Height)
             {
@@ -75,7 +93,9 @@ namespace Arkanoid.Objects
         {
             _oldRectangle = Rectangle;
 
-            Position = new Vector2(Position.X + (DirectionX * _speed), Position.Y + (DirectionY * _speed));
+            CheckBallSpeedCounter();
+
+            Position = new Vector2((float)(Position.X + (DirectionX * _speed)), (float)(Position.Y + (DirectionY * _speed)));
             EdgeCollisions();
         }
 

@@ -1,5 +1,6 @@
 ﻿using Arkanoid.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,22 +15,7 @@ namespace Arkanoid.States
         private SpriteFont _font;
         #endregion
 
-        #region Methods
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin();
-
-            foreach (var component in _components)
-                component.Draw(gameTime, spriteBatch);
-
-            spriteBatch.End();
-        }
-
-        private void LoadGameButton_Click(object sender, EventArgs e)
-        {
-            //Load Game
-        }
-
+        #region Constructors
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
@@ -76,10 +62,28 @@ namespace Arkanoid.States
                 quitButton,
             };
         }
+        #endregion
+
+        #region Methods
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+
+            foreach (var component in _components)
+                component.Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
+        }
+
+        private void LoadGameButton_Click(object sender, EventArgs e)
+        {
+            //Load Game
+        }
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
+            MediaPlayer.Stop();
+            _game.ChangeState(new GameState(_game, _graphicsDevice, _content));          
         }
 
         private void OptionsButton_Click(object sender, EventArgs e)

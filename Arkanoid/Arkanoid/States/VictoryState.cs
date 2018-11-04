@@ -17,6 +17,24 @@ namespace Arkanoid.States
         private float _fontOpacityFlag = 0;
         #endregion
 
+        #region Contructors
+        public VictoryState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
+           : base(game, graphicsDevice, content)
+        {
+            _score = score;
+
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
+            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
+            Background background = new Background(backgroundTexture);
+
+            _components = new List<Component>()
+            {
+                background,
+            };
+        }
+        #endregion
+
         #region Methods
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -80,22 +98,6 @@ namespace Arkanoid.States
         public override void Update(GameTime gameTime)
         {
             StringFlashing();
-        }
-
-        public VictoryState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
-            : base(game, graphicsDevice, content)
-        {
-            _score = score;
-
-            _font = _content.Load<SpriteFont>("Fonts/Font");
-
-            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
-            Background background = new Background(backgroundTexture);
-
-            _components = new List<Component>()
-            {
-                background,
-            };
         }
         #endregion
     }

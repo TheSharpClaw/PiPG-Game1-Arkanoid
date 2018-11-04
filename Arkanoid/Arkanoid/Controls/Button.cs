@@ -35,14 +35,16 @@ namespace Arkanoid.Controls
         public Color TextColor { get; set; }
         #endregion
 
-        #region Methods
+        #region Constructors
         public Button(Texture2D texture, SpriteFont font)
         {
             _texture = texture;
             _font = font;
             TextColor = Color.Black;
         }
+        #endregion
 
+        #region Methods
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             var color = Color.White;

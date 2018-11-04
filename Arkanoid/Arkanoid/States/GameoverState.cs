@@ -18,6 +18,26 @@ namespace Arkanoid.States
         private float _fontOpacityFlag = 0;
         #endregion
 
+        #region Contructors
+        public GameoverState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
+            : base(game, graphicsDevice, content)
+        {
+            _score = score;
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
+            _fontOpacity = 0;
+            _fontOpacityFlag = 0;
+
+            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
+            Background background = new Background(backgroundTexture);
+
+            _components = new List<Component>()
+            {
+                background,
+            };
+        }
+        #endregion
+
         #region Methods
         private void CheckIfKeyPressed()
         {
@@ -66,24 +86,6 @@ namespace Arkanoid.States
             {
                 spriteBatch.DrawString(_font, "0000" + _score.ToString(), new Vector2(215, 450), Color.White, 0, new Vector2(0, 0), 2, SpriteEffects.None, 1);
             }
-        }
-
-        public GameoverState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
-            : base(game, graphicsDevice, content)
-        {
-            _score = score;
-            _font = _content.Load<SpriteFont>("Fonts/Font");
-
-            _fontOpacity = 0;
-            _fontOpacityFlag = 0;
-
-            var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
-            Background background = new Background(backgroundTexture);
-
-            _components = new List<Component>()
-            {
-                background,
-            };
         }
 
         public override void PostUpdate(GameTime gameTime)

@@ -19,45 +19,7 @@ namespace Arkanoid.States
         private SpriteFont _font;
         #endregion
 
-        #region Methods    
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
-        }
-
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin();
-
-            foreach (var component in _components)
-                component.Draw(gameTime, spriteBatch);
-
-            spriteBatch.DrawString(_font, "AI Difficulty", new Vector2(65, 310), Color.White);
-
-            spriteBatch.End();
-        }
-
-        private void EasyButton_Click(object sender, EventArgs e)
-        {
-            _easyButton.IsClicked = true;
-            _mediumButton.IsClicked = false;
-            _hardButton.IsClicked = false;
-        }
-
-        private void HardButton_Click(object sender, EventArgs e)
-        {
-            _hardButton.IsClicked = true;
-            _easyButton.IsClicked = false;
-            _mediumButton.IsClicked = false;
-        }
-
-        private void MediumButton_Click(object sender, EventArgs e)
-        {
-            _mediumButton.IsClicked = true;
-            _easyButton.IsClicked = false;
-            _hardButton.IsClicked = false;
-        }
-
+        #region Contructors
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
@@ -111,6 +73,46 @@ namespace Arkanoid.States
                 _cancelButton,
                 _saveButton,
             };
+        }
+        #endregion
+
+        #region Methods    
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            _game.ChangeState(new MenuState(_game, _graphicsDevice, _content));
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin();
+
+            foreach (var component in _components)
+                component.Draw(gameTime, spriteBatch);
+
+            spriteBatch.DrawString(_font, "AI Difficulty", new Vector2(65, 310), Color.White);
+
+            spriteBatch.End();
+        }
+
+        private void EasyButton_Click(object sender, EventArgs e)
+        {
+            _easyButton.IsClicked = true;
+            _mediumButton.IsClicked = false;
+            _hardButton.IsClicked = false;
+        }
+
+        private void HardButton_Click(object sender, EventArgs e)
+        {
+            _hardButton.IsClicked = true;
+            _easyButton.IsClicked = false;
+            _mediumButton.IsClicked = false;
+        }
+
+        private void MediumButton_Click(object sender, EventArgs e)
+        {
+            _mediumButton.IsClicked = true;
+            _easyButton.IsClicked = false;
+            _hardButton.IsClicked = false;
         }
 
         public override void PostUpdate(GameTime gameTime)

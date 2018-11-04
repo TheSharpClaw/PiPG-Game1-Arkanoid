@@ -18,8 +18,75 @@ namespace Arkanoid.States
         private Background _gameStateBackground;
         private Paddle _paddle;
         private Texture2D _ballTexture;
+        private Texture2D _lifePowerUPTexture;
+        private Texture2D _ballSpeedPowerUPTexture;
+        private Texture2D _paddleSpeedPowerUPTexture;
         private List<Ball> _listOfBalls = new List<Ball> { };
         private List<Block> _listOfBlocks = new List<Block> { };
+        private List<PowerUP> _listOfPowerUPs = new List<PowerUP> { };
+        #endregion
+
+        #region Constructors
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
+            : base(game, graphicsDevice, content)
+        {
+            _lifeCounter = 2;
+            _score = 0;
+
+            _font = _content.Load<SpriteFont>("Fonts/Font");
+
+            var gameStateBackgroundTexture = _content.Load<Texture2D>("Backgrounds/GameStateBackground");
+            _gameStateBackground = new Background(gameStateBackgroundTexture);
+
+            var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
+            _paddle = new Paddle(paddleTextureStandard, new Vector2(200, 660));
+
+            _ballTexture = _content.Load<Texture2D>("Objects/Ball");
+            _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
+
+            _lifePowerUPTexture = _content.Load<Texture2D>("Objects/LifePowerUP");
+            _ballSpeedPowerUPTexture = _content.Load<Texture2D>("Objects/BallSpeedPowerUP");
+            _paddleSpeedPowerUPTexture = _content.Load<Texture2D>("Objects/PaddleSpeedPowerUP");
+
+            var blockTexture = _content.Load<Texture2D>("Objects/Block");
+
+            #region ToDestroy
+            var block1 = new Block(blockTexture, 3) { Position = new Vector2(20, 180) }; _listOfBlocks.Add(block1);
+            var block2 = new Block(blockTexture, 3) { Position = new Vector2(60, 180) }; _listOfBlocks.Add(block2);
+            var block3 = new Block(blockTexture, 3) { Position = new Vector2(100, 180) }; _listOfBlocks.Add(block3);
+            var block4 = new Block(blockTexture, 3) { Position = new Vector2(140, 180) }; _listOfBlocks.Add(block4);
+            var block5 = new Block(blockTexture, 3) { Position = new Vector2(180, 180) }; _listOfBlocks.Add(block5);
+            var block6 = new Block(blockTexture, 3) { Position = new Vector2(220, 180) }; _listOfBlocks.Add(block6);
+            var block7 = new Block(blockTexture, 3) { Position = new Vector2(260, 180) }; _listOfBlocks.Add(block7);
+            var block8 = new Block(blockTexture, 3) { Position = new Vector2(300, 180) }; _listOfBlocks.Add(block8);
+            var block9 = new Block(blockTexture, 3) { Position = new Vector2(340, 180) }; _listOfBlocks.Add(block9);
+            var block10 = new Block(blockTexture, 3) { Position = new Vector2(380, 180) }; _listOfBlocks.Add(block10);
+            var block11 = new Block(blockTexture, 3) { Position = new Vector2(420, 180) }; _listOfBlocks.Add(block11);
+            var block12 = new Block(blockTexture, 3) { Position = new Vector2(460, 180) }; _listOfBlocks.Add(block12);
+            var block13 = new Block(blockTexture, 3) { Position = new Vector2(500, 180) }; _listOfBlocks.Add(block13);          
+            #endregion
+
+            #region Can'tBeDestroyed
+            //var block16 = new Block(blockTexture, 4) { Position = new Vector2(100, 200) }; _listOfBlocks.Add(block16);
+            //var block17 = new Block(blockTexture, 4) { Position = new Vector2(140, 200) }; _listOfBlocks.Add(block17);
+            //var block18 = new Block(blockTexture, 4) { Position = new Vector2(180, 200) }; _listOfBlocks.Add(block18);
+            //var block19 = new Block(blockTexture, 4) { Position = new Vector2(220, 200) }; _listOfBlocks.Add(block19);
+            //var block20 = new Block(blockTexture, 4) { Position = new Vector2(260, 200) }; _listOfBlocks.Add(block20);
+            //var block21 = new Block(blockTexture, 4) { Position = new Vector2(300, 200) }; _listOfBlocks.Add(block21);
+            //var block22 = new Block(blockTexture, 4) { Position = new Vector2(340, 200) }; _listOfBlocks.Add(block22);
+            //var block23 = new Block(blockTexture, 4) { Position = new Vector2(380, 200) }; _listOfBlocks.Add(block23);
+            //var block24 = new Block(blockTexture, 4) { Position = new Vector2(420, 200) }; _listOfBlocks.Add(block24);
+            //var block25 = new Block(blockTexture, 4) { Position = new Vector2(460, 200) }; _listOfBlocks.Add(block25);
+            //var block26 = new Block(blockTexture, 4) { Position = new Vector2(500, 200) }; _listOfBlocks.Add(block26);
+            #endregion
+
+            _components = new List<Component>()
+            {
+                _gameStateBackground,
+                _paddle,
+            };
+
+        }
         #endregion
 
         #region Methods 
@@ -50,41 +117,42 @@ namespace Arkanoid.States
                 {
                     if (ball.Rectangle.Intersects(block.Rectangle))
                     {
-                        float distanceVertical;
-                        float distanceHorizontal;
-
-                        //Ball comes from upper left
-                        if (ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
-                            ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
+                        if (ball.Rectangle.Intersects(block.Top) && ball.DirectionY > 0)
                         {
-                            distanceVertical = Math.Abs((block.Rectangle.Top - ball.OldRectangle.Bottom) * ball.DirectionY);
-                            distanceHorizontal = Math.Abs((block.Rectangle.Left - ball.OldRectangle.Right) * ball.DirectionX);
+                            ball.DirectionY *= -1;
                         }
-                        //Ball comes from upper right
-                        else if (ball.OldRectangle.Center.X >= block.Rectangle.Center.X &&
-                                 ball.OldRectangle.Center.Y <= block.Rectangle.Center.Y)
+                        else if (ball.Rectangle.Intersects(block.Bottom) && ball.DirectionY < 0)
                         {
-                            distanceVertical = Math.Abs((block.Rectangle.Top - ball.OldRectangle.Bottom) * ball.DirectionY);
-                            distanceHorizontal = Math.Abs((ball.OldRectangle.Left - block.Rectangle.Right) * ball.DirectionX);
+                            ball.DirectionY *= -1;
                         }
-                        //Ball comes from bottom left
-                        else if (ball.OldRectangle.Center.X <= block.Rectangle.Center.X &&
-                                 ball.OldRectangle.Center.Y >= block.Rectangle.Center.Y)
+                        else if (ball.Rectangle.Intersects(block.Left) && ball.DirectionX > 0)
                         {
-                            distanceVertical = Math.Abs((ball.OldRectangle.Top - block.Rectangle.Bottom) * ball.DirectionY);
-                            distanceHorizontal = Math.Abs((block.Rectangle.Left - ball.OldRectangle.Right) * ball.DirectionX);
+                            ball.DirectionX *= -1;
                         }
-                        //Ball comes from bottom right
-                        else
+                        else if (ball.Rectangle.Intersects(block.Right) && ball.DirectionY < 0)
                         {
-                            distanceVertical = Math.Abs((ball.OldRectangle.Top - block.Rectangle.Bottom) * ball.DirectionY);
-                            distanceHorizontal = Math.Abs((ball.OldRectangle.Left - block.Rectangle.Right) * ball.DirectionX);
+                            ball.DirectionX *= -1;
                         }
 
-                        if (distanceVertical > distanceHorizontal)
-                            ball.DirectionX = ball.DirectionX * -1;
-                        else
-                            ball.DirectionY = ball.DirectionY * -1;
+                        if (block.State != 4)
+                        {
+                            Random rnd = new Random();
+
+                            if (rnd.Next(1, 6) == 5)
+                            {
+                                int type = rnd.Next(0, 5);
+                                if (type == 0)
+                                    _listOfPowerUPs.Add(new PowerUP(_lifePowerUPTexture, PowerUP.Type.Life, rnd.Next(20, 51), true, new Vector2(block.Rectangle.Left + 10, block.Rectangle.Top)));
+                                else if (type == 1)
+                                    _listOfPowerUPs.Add(new PowerUP(_ballSpeedPowerUPTexture, PowerUP.Type.BallSpeed, rnd.Next(20, 51), true, new Vector2(block.Rectangle.Left + 10, block.Rectangle.Top)));
+                                else if (type == 2)
+                                    _listOfPowerUPs.Add(new PowerUP(_ballSpeedPowerUPTexture, PowerUP.Type.BallSpeed, rnd.Next(20, 51), false, new Vector2(block.Rectangle.Left + 10, block.Rectangle.Top)));
+                                else if (type == 3)
+                                    _listOfPowerUPs.Add(new PowerUP(_paddleSpeedPowerUPTexture, PowerUP.Type.PaddleSpeed, rnd.Next(20, 51), true, new Vector2(block.Rectangle.Left + 10, block.Rectangle.Top)));
+                                else if (type == 4)
+                                    _listOfPowerUPs.Add(new PowerUP(_paddleSpeedPowerUPTexture, PowerUP.Type.PaddleSpeed, rnd.Next(20, 51), false, new Vector2(block.Rectangle.Left + 10, block.Rectangle.Top)));
+                            }
+                        }
 
                         if (block.State == 3)
                             block.State = 2;
@@ -94,9 +162,12 @@ namespace Arkanoid.States
                         {
                             _score += 40;
                             _listOfBlocks.Remove(block);
+                            ball.SpeedCounter -= 2;
                         }
 
                         _score += 10;
+
+                        ball.SpeedCounter++;
 
                         break;
                     }                  
@@ -110,8 +181,29 @@ namespace Arkanoid.States
             {
                 if (ball.Rectangle.Intersects(_paddle.Rectangle))
                 {
-                    ball.DirectionY = Math.Abs(ball.DirectionY) * -1;
-                    _score += 10;
+                    double paddleWidth = _paddle.Rectangle.Width;
+                    double absoluteBallToPaddlePosition = ball.Rectangle.Center.X - _paddle.Rectangle.Left;
+
+                    if(absoluteBallToPaddlePosition > paddleWidth)
+                        absoluteBallToPaddlePosition = paddleWidth;
+                    else if(absoluteBallToPaddlePosition < 0)
+                        absoluteBallToPaddlePosition = 0;
+
+                    double angle = Math.Round((absoluteBallToPaddlePosition * 120) / paddleWidth) + 30;
+
+                    if (angle >= 90 && angle < 100)
+                        angle = 100;
+                    else if (angle < 90 && angle > 80)
+                        angle = 80;
+
+                    angle = Math.Round(angle / 10) * 10;
+
+                    _score = (int)angle;
+
+                    ball.DirectionX = Math.Cos(ConvertToRadians(angle)) * -1;
+                    ball.DirectionY = Math.Sin(ConvertToRadians(angle)) * -1;
+
+                    ball.SpeedCounter++;
                 }
             }        
         }
@@ -138,62 +230,37 @@ namespace Arkanoid.States
                 _game.ChangeState(new GameoverState(_game, _graphicsDevice, _content, _score));
         }
 
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
-            : base(game, graphicsDevice, content)
+        private void CheckPowerUPs()
         {
-            _lifeCounter = 2;
-            _score = 0;
-
-            _font = _content.Load<SpriteFont>("Fonts/Font");
-
-            var gameStateBackgroundTexture = _content.Load<Texture2D>("Backgrounds/GameStateBackground");
-            _gameStateBackground = new Background(gameStateBackgroundTexture);
-
-            var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
-            _paddle = new Paddle(paddleTextureStandard, new Vector2(200, 660));
-
-            _ballTexture = _content.Load<Texture2D>("Objects/Ball");
-            _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
-                
-            var blockTexture = _content.Load<Texture2D>("Objects/Block");
-            #region ToDestroy
-            var block1 = new Block(blockTexture, 1) { Position = new Vector2(100, 180) }; _listOfBlocks.Add(block1);
-            var block2 = new Block(blockTexture, 1) { Position = new Vector2(140, 180) }; _listOfBlocks.Add(block2);
-            //var block3 = new Block(blockTexture, 2) { Position = new Vector2(160, 70) }; _listOfBlocks.Add(block3);
-            //var block4 = new Block(blockTexture, 3) { Position = new Vector2(205, 70) }; _listOfBlocks.Add(block4);
-            //var block5 = new Block(blockTexture, 2) { Position = new Vector2(250, 70) }; _listOfBlocks.Add(block5);
-            //var block6 = new Block(blockTexture, 3) { Position = new Vector2(295, 70) }; _listOfBlocks.Add(block6);
-            //var block7 = new Block(blockTexture, 1) { Position = new Vector2(340, 70) }; _listOfBlocks.Add(block7);
-            //var block8 = new Block(blockTexture, 3) { Position = new Vector2(385, 70) }; _listOfBlocks.Add(block8);
-            //var block9 = new Block(blockTexture, 3) { Position = new Vector2(430, 70) }; _listOfBlocks.Add(block9);
-            //var block10 = new Block(blockTexture, 2) { Position = new Vector2(475, 70) }; _listOfBlocks.Add(block10);
-            //var block11 = new Block(blockTexture, 1) { Position = new Vector2(520, 70) }; _listOfBlocks.Add(block11);
-            //var block12 = new Block(blockTexture, 3) { Position = new Vector2(565, 70) }; _listOfBlocks.Add(block12);
-            //var block13 = new Block(blockTexture, 2) { Position = new Vector2(610, 70) }; _listOfBlocks.Add(block13);
-            //var block14 = new Block(blockTexture, 1) { Position = new Vector2(655, 70) }; _listOfBlocks.Add(block14);
-            //var block15 = new Block(blockTexture, 3) { Position = new Vector2(700, 70) }; _listOfBlocks.Add(block15);
-            #endregion
-            #region Can'tBeDestroyed
-            var block16 = new Block(blockTexture, 4) { Position = new Vector2(100, 200) }; _listOfBlocks.Add(block16);
-            var block17 = new Block(blockTexture, 4) { Position = new Vector2(140, 200) }; _listOfBlocks.Add(block17);
-            var block18 = new Block(blockTexture, 4) { Position = new Vector2(180, 200) }; _listOfBlocks.Add(block18);
-            var block19 = new Block(blockTexture, 4) { Position = new Vector2(220, 200) }; _listOfBlocks.Add(block19);
-            var block20 = new Block(blockTexture, 4) { Position = new Vector2(260, 200) }; _listOfBlocks.Add(block20);
-            var block21 = new Block(blockTexture, 4) { Position = new Vector2(300, 200) }; _listOfBlocks.Add(block21);
-            var block22 = new Block(blockTexture, 4) { Position = new Vector2(340, 200) }; _listOfBlocks.Add(block22);
-            var block23 = new Block(blockTexture, 4) { Position = new Vector2(380, 200) }; _listOfBlocks.Add(block23);
-            var block24 = new Block(blockTexture, 4) { Position = new Vector2(420, 200) }; _listOfBlocks.Add(block24);
-            var block25 = new Block(blockTexture, 4) { Position = new Vector2(460, 200) }; _listOfBlocks.Add(block25);
-            var block26 = new Block(blockTexture, 4) { Position = new Vector2(500, 200) }; _listOfBlocks.Add(block26);
-            #endregion
-
-            _components = new List<Component>()
+            foreach (PowerUP powerUP in _listOfPowerUPs)
             {
-                _gameStateBackground,
-                _paddle,
-            };
+                if (powerUP.Rectangle.Intersects(_paddle.Rectangle))
+                {
+                    if (powerUP.State == PowerUP.Type.Life)
+                        _lifeCounter++;
+                    else if (powerUP.State == PowerUP.Type.BallSpeed && powerUP.IsGood == true)
+                        foreach (Ball ball in _listOfBalls)
+                            ball.Speed -= 2;
+                    else if (powerUP.State == PowerUP.Type.BallSpeed && powerUP.IsGood == false)
+                        foreach (Ball ball in _listOfBalls)
+                            ball.Speed++;
+                    else if (powerUP.State == PowerUP.Type.PaddleSpeed && powerUP.IsGood == true)
+                        _paddle.Speed++;
+                    else if (powerUP.State == PowerUP.Type.PaddleSpeed && powerUP.IsGood == false)
+                        _paddle.Speed--;
 
-        } 
+                    _listOfPowerUPs.Remove(powerUP);
+                    break;
+                }
+            }
+        }
+
+        private double ConvertToRadians(double angle)
+        {
+            return (Math.PI / 180) * angle;
+        }
+
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
@@ -209,6 +276,9 @@ namespace Arkanoid.States
 
             foreach (Block block in _listOfBlocks)
                 block.Draw(gameTime, spriteBatch);
+
+            foreach (PowerUP powerUP in _listOfPowerUPs)
+                powerUP.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
         }
@@ -273,14 +343,16 @@ namespace Arkanoid.States
             foreach (Block block in _listOfBlocks)
                 block.Update(gameTime);
 
+            foreach (PowerUP powerUP in _listOfPowerUPs)
+                powerUP.Update(gameTime);
+
             CheckIfBallsCollideWithPaddle();
             CheckIfBallsCollideWithAnyBlock();
             CheckBalls();
+            CheckPowerUPs();
             CheckIfGameOver();
             CheckIfGameIsWon();
         }
-
-        
         #endregion
     }
 }
