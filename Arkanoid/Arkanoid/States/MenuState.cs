@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Arkanoid.States
 {
@@ -13,12 +14,21 @@ namespace Arkanoid.States
         #region Fields
         private List<Component> _components;
         private SpriteFont _font;
+
+        private SoundEffect _mainMenuSE;
         #endregion
 
         #region Constructors
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
             : base(game, graphicsDevice, content)
         {
+            _mainMenuSE = _content.Load<SoundEffect>("SoundEffects/SplashScreenAndMainMenuSE");
+
+            if (MediaPlayer.State == MediaState.Stopped)
+            {
+                _mainMenuSE.Play();
+            }
+
             var backgroundTexture = _content.Load<Texture2D>("Backgrounds/Background");
             Background background = new Background(backgroundTexture);
 

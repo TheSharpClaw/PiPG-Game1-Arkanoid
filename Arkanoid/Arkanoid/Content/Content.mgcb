@@ -148,7 +148,7 @@
 
 #begin SoundEffects/GameOver.ogg
 /importer:OggImporter
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:SoundEffects/GameOver.ogg
 
@@ -175,6 +175,18 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:SoundEffects/SplashScreenAndMainMenu.mp3
+
+#begin SoundEffects/SplashScreenAndMainMenuSE.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/SplashScreenAndMainMenuSE.mp3
+
+#begin SoundEffects/VictorySong.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundEffects/VictorySong.wav
 
 #begin SplashScreen/SplashScreen1.png
 /importer:TextureImporter

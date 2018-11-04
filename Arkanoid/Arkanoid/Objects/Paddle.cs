@@ -9,7 +9,7 @@ namespace Arkanoid.Objects
         #region Fields
         private Texture2D _currentTexture;
         private Vector2 _position;
-        private int _speed;
+        private float _speed;
         #endregion
 
         #region Properties 
@@ -22,7 +22,7 @@ namespace Arkanoid.Objects
         }
 
         public Vector2 Position { get => _position; set => _position = value; }
-        public int Speed { get => _speed; set => _speed = value; }
+        public float Speed { get => _speed; set => _speed = value; }
         #endregion
 
         #region Contructors
@@ -30,7 +30,7 @@ namespace Arkanoid.Objects
         {
             _currentTexture = texture;
             Position = position;
-            Speed = 5;
+            Speed = 0.5f;
         }
         #endregion
 
@@ -59,6 +59,11 @@ namespace Arkanoid.Objects
         {
             //TODO: Changing paddle after picking up various power ups
             PaddleMovement();
+
+            if (_speed > 1)
+                _speed = 1;
+            else if (_speed < 0.3f)
+                _speed = 0.3f;
         }
         #endregion
     }

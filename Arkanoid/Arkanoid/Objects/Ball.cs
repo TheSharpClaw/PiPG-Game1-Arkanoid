@@ -47,7 +47,7 @@ namespace Arkanoid.Objects
             _texture = texture;
             DirectionX = Math.Sqrt(2);
             DirectionY = Math.Sqrt(2);
-            Speed = 5f;
+            Speed = 0.5f;
         }
         #endregion
 
@@ -56,7 +56,7 @@ namespace Arkanoid.Objects
         {
             if (_speedCounter >= 10)
             {
-                _speed += 0.5f;
+                _speed += 0.05f;
                 _speedCounter = 0;
             }
         }
@@ -70,17 +70,17 @@ namespace Arkanoid.Objects
         {
             if (Position.X < 20)
             {
-                DirectionX = DirectionX * -1;
+                DirectionX = Math.Abs(DirectionX);
                 _speedCounter++;
             }
             if (Position.X > 541 - _texture.Width)
             {
-                DirectionX = DirectionX * -1;
+                DirectionX = Math.Abs(DirectionX) * -1;
                 _speedCounter++;
             }
             if (Position.Y < 120)
             {
-                DirectionY = DirectionY * -1;
+                DirectionY = Math.Abs(DirectionY);
                 _speedCounter++;
             }
             if (Position.Y > 681 - _texture.Height)
@@ -92,6 +92,11 @@ namespace Arkanoid.Objects
         public override void Update(GameTime gameTime)
         {
             _oldRectangle = Rectangle;
+
+            if (_speed > 1.5f)
+                _speed = 1.5f;
+            else if (_speed < 0.4f)
+                _speed = 0.4f;
 
             CheckBallSpeedCounter();
 

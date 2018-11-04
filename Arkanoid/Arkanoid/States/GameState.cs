@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Arkanoid.Controls;
 using Arkanoid.Objects;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -17,13 +19,21 @@ namespace Arkanoid.States
         private List<Component> _components;
         private Background _gameStateBackground;
         private Paddle _paddle;
+        private Texture2D _paddleTexture;
         private Texture2D _ballTexture;
+        private Texture2D _blockTexture;
         private Texture2D _lifePowerUPTexture;
         private Texture2D _ballSpeedPowerUPTexture;
         private Texture2D _paddleSpeedPowerUPTexture;
         private List<Ball> _listOfBalls = new List<Ball> { };
         private List<Block> _listOfBlocks = new List<Block> { };
         private List<PowerUP> _listOfPowerUPs = new List<PowerUP> { };
+
+        private SoundEffect _paddleDestroySE;
+        private SoundEffect _gameOverSE;
+        private SoundEffect _ballCollideWithPaddleSE;
+        private SoundEffect _ballCollideWithDestructibleBlockSE;
+        private SoundEffect _ballCollideWithIndestructibleBlockSE;
         #endregion
 
         #region Constructors
@@ -38,8 +48,8 @@ namespace Arkanoid.States
             var gameStateBackgroundTexture = _content.Load<Texture2D>("Backgrounds/GameStateBackground");
             _gameStateBackground = new Background(gameStateBackgroundTexture);
 
-            var paddleTextureStandard = _content.Load<Texture2D>("Objects/PaddleStandard");
-            _paddle = new Paddle(paddleTextureStandard, new Vector2(200, 660));
+            _paddleTexture = _content.Load<Texture2D>("Objects/PaddleStandard");
+            _paddle = new Paddle(_paddleTexture, new Vector2(200, 660));
 
             _ballTexture = _content.Load<Texture2D>("Objects/Ball");
             _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
@@ -48,44 +58,21 @@ namespace Arkanoid.States
             _ballSpeedPowerUPTexture = _content.Load<Texture2D>("Objects/BallSpeedPowerUP");
             _paddleSpeedPowerUPTexture = _content.Load<Texture2D>("Objects/PaddleSpeedPowerUP");
 
-            var blockTexture = _content.Load<Texture2D>("Objects/Block");
+            _blockTexture = _content.Load<Texture2D>("Objects/Block");
 
-            #region ToDestroy
-            var block1 = new Block(blockTexture, 3) { Position = new Vector2(20, 180) }; _listOfBlocks.Add(block1);
-            var block2 = new Block(blockTexture, 3) { Position = new Vector2(60, 180) }; _listOfBlocks.Add(block2);
-            var block3 = new Block(blockTexture, 3) { Position = new Vector2(100, 180) }; _listOfBlocks.Add(block3);
-            var block4 = new Block(blockTexture, 3) { Position = new Vector2(140, 180) }; _listOfBlocks.Add(block4);
-            var block5 = new Block(blockTexture, 3) { Position = new Vector2(180, 180) }; _listOfBlocks.Add(block5);
-            var block6 = new Block(blockTexture, 3) { Position = new Vector2(220, 180) }; _listOfBlocks.Add(block6);
-            var block7 = new Block(blockTexture, 3) { Position = new Vector2(260, 180) }; _listOfBlocks.Add(block7);
-            var block8 = new Block(blockTexture, 3) { Position = new Vector2(300, 180) }; _listOfBlocks.Add(block8);
-            var block9 = new Block(blockTexture, 3) { Position = new Vector2(340, 180) }; _listOfBlocks.Add(block9);
-            var block10 = new Block(blockTexture, 3) { Position = new Vector2(380, 180) }; _listOfBlocks.Add(block10);
-            var block11 = new Block(blockTexture, 3) { Position = new Vector2(420, 180) }; _listOfBlocks.Add(block11);
-            var block12 = new Block(blockTexture, 3) { Position = new Vector2(460, 180) }; _listOfBlocks.Add(block12);
-            var block13 = new Block(blockTexture, 3) { Position = new Vector2(500, 180) }; _listOfBlocks.Add(block13);          
-            #endregion
+            _paddleDestroySE = _content.Load<SoundEffect>("SoundEffects/PaddleDestroy");
+            _gameOverSE = _content.Load<SoundEffect>("SoundEffects/GameOver");
+            _ballCollideWithPaddleSE = _content.Load<SoundEffect>("SoundEffects/BallCollideWithPaddle");
+            _ballCollideWithDestructibleBlockSE = _content.Load<SoundEffect>("SoundEffects/BallCollideWithDestructibleBlock");
+            _ballCollideWithIndestructibleBlockSE = _content.Load<SoundEffect>("SoundEffects/BallCollideWithIndestructibleBlock");
 
-            #region Can'tBeDestroyed
-            //var block16 = new Block(blockTexture, 4) { Position = new Vector2(100, 200) }; _listOfBlocks.Add(block16);
-            //var block17 = new Block(blockTexture, 4) { Position = new Vector2(140, 200) }; _listOfBlocks.Add(block17);
-            //var block18 = new Block(blockTexture, 4) { Position = new Vector2(180, 200) }; _listOfBlocks.Add(block18);
-            //var block19 = new Block(blockTexture, 4) { Position = new Vector2(220, 200) }; _listOfBlocks.Add(block19);
-            //var block20 = new Block(blockTexture, 4) { Position = new Vector2(260, 200) }; _listOfBlocks.Add(block20);
-            //var block21 = new Block(blockTexture, 4) { Position = new Vector2(300, 200) }; _listOfBlocks.Add(block21);
-            //var block22 = new Block(blockTexture, 4) { Position = new Vector2(340, 200) }; _listOfBlocks.Add(block22);
-            //var block23 = new Block(blockTexture, 4) { Position = new Vector2(380, 200) }; _listOfBlocks.Add(block23);
-            //var block24 = new Block(blockTexture, 4) { Position = new Vector2(420, 200) }; _listOfBlocks.Add(block24);
-            //var block25 = new Block(blockTexture, 4) { Position = new Vector2(460, 200) }; _listOfBlocks.Add(block25);
-            //var block26 = new Block(blockTexture, 4) { Position = new Vector2(500, 200) }; _listOfBlocks.Add(block26);
-            #endregion
+            readLevelFromFile(new StreamReader("../../../../Levels/level1.txt"));
 
             _components = new List<Component>()
             {
                 _gameStateBackground,
                 _paddle,
             };
-
         }
         #endregion
 
@@ -93,9 +80,7 @@ namespace Arkanoid.States
         private void CheckBalls()
         {
             if (_listOfBalls.Count > 0)
-            {
                 foreach (Ball ball in _listOfBalls)
-                {
                     if (ball.Position.Y > 680)
                     {
                         _listOfBalls.Remove(ball);
@@ -103,36 +88,25 @@ namespace Arkanoid.States
                         _lifeCounter--;
                         _paddle.Position = new Vector2(200, 660);
                         _listOfBalls.Add(new Ball(_ballTexture) { Position = new Vector2(262, 644) });
+                        _paddleDestroySE.Play();
                         break;
-                    }                    
-                }
-            }         
+                    }                          
         }
 
         private void CheckIfBallsCollideWithAnyBlock()
         {
             foreach (Ball ball in _listOfBalls)
-            {
                 foreach (Block block in _listOfBlocks)
-                {
                     if (ball.Rectangle.Intersects(block.Rectangle))
                     {
                         if (ball.Rectangle.Intersects(block.Top) && ball.DirectionY > 0)
-                        {
                             ball.DirectionY *= -1;
-                        }
                         else if (ball.Rectangle.Intersects(block.Bottom) && ball.DirectionY < 0)
-                        {
                             ball.DirectionY *= -1;
-                        }
                         else if (ball.Rectangle.Intersects(block.Left) && ball.DirectionX > 0)
-                        {
                             ball.DirectionX *= -1;
-                        }
                         else if (ball.Rectangle.Intersects(block.Right) && ball.DirectionY < 0)
-                        {
                             ball.DirectionX *= -1;
-                        }
 
                         if (block.State != 4)
                         {
@@ -155,32 +129,43 @@ namespace Arkanoid.States
                         }
 
                         if (block.State == 3)
+                        {
+                            _ballCollideWithDestructibleBlockSE.Play();
+
                             block.State = 2;
+                            _score += 10;
+                        }
                         else if (block.State == 2)
+                        {
+                            _ballCollideWithDestructibleBlockSE.Play();
+
                             block.State = 1;
+                            _score += 10;
+                        }
                         else if (block.State == 1)
                         {
-                            _score += 40;
+                            _ballCollideWithDestructibleBlockSE.Play();
+
+                            _score += 50;
                             _listOfBlocks.Remove(block);
                             ball.SpeedCounter -= 2;
                         }
-
-                        _score += 10;
+                        else if (block.State == 4)
+                            _ballCollideWithIndestructibleBlockSE.Play();
 
                         ball.SpeedCounter++;
 
                         break;
-                    }                  
-                }              
-            }
+                    }                                
         }
 
         private void CheckIfBallsCollideWithPaddle()
         {
             foreach (Ball ball in _listOfBalls)
-            {
                 if (ball.Rectangle.Intersects(_paddle.Rectangle))
                 {
+                    _ballCollideWithPaddleSE.Play();
+
                     double paddleWidth = _paddle.Rectangle.Width;
                     double absoluteBallToPaddlePosition = ball.Rectangle.Center.X - _paddle.Rectangle.Left;
 
@@ -189,23 +174,20 @@ namespace Arkanoid.States
                     else if(absoluteBallToPaddlePosition < 0)
                         absoluteBallToPaddlePosition = 0;
 
-                    double angle = Math.Round((absoluteBallToPaddlePosition * 120) / paddleWidth) + 30;
+                    double angle = Math.Round((absoluteBallToPaddlePosition * 110) / paddleWidth) + 35;
 
-                    if (angle >= 90 && angle < 100)
-                        angle = 100;
-                    else if (angle < 90 && angle > 80)
-                        angle = 80;
+                    if (angle >= 90 && angle < 95)
+                        angle = 95;
+                    else if (angle < 90 && angle > 85)
+                        angle = 85;
 
-                    angle = Math.Round(angle / 10) * 10;
-
-                    _score = (int)angle;
+                    angle = Math.Round(angle / 5) * 5;
 
                     ball.DirectionX = Math.Cos(ConvertToRadians(angle)) * -1;
                     ball.DirectionY = Math.Sin(ConvertToRadians(angle)) * -1;
 
                     ball.SpeedCounter++;
-                }
-            }        
+                }    
         }
 
         private void CheckIfGameIsWon()
@@ -213,12 +195,8 @@ namespace Arkanoid.States
             bool gameWonFlag = true;
 
             foreach (Block block in _listOfBlocks)
-            {
                 if (block.State != 4)
-                {
                     gameWonFlag = false;
-                }
-            }
 
             if (gameWonFlag)
                 _game.ChangeState(new VictoryState(_game, _graphicsDevice, _content, _score));
@@ -227,7 +205,11 @@ namespace Arkanoid.States
         private void CheckIfGameOver()
         {
             if (_lifeCounter < 0)
+            {
+                _gameOverSE.Play();
                 _game.ChangeState(new GameoverState(_game, _graphicsDevice, _content, _score));
+            }
+                
         }
 
         private void CheckPowerUPs()
@@ -240,18 +222,24 @@ namespace Arkanoid.States
                         _lifeCounter++;
                     else if (powerUP.State == PowerUP.Type.BallSpeed && powerUP.IsGood == true)
                         foreach (Ball ball in _listOfBalls)
-                            ball.Speed -= 2;
+                            ball.Speed -= 0.2f;
                     else if (powerUP.State == PowerUP.Type.BallSpeed && powerUP.IsGood == false)
                         foreach (Ball ball in _listOfBalls)
-                            ball.Speed++;
+                            ball.Speed += 0.1f;
                     else if (powerUP.State == PowerUP.Type.PaddleSpeed && powerUP.IsGood == true)
-                        _paddle.Speed++;
+                        _paddle.Speed += 0.1f;
                     else if (powerUP.State == PowerUP.Type.PaddleSpeed && powerUP.IsGood == false)
-                        _paddle.Speed--;
+                        _paddle.Speed -= 0.1f;
 
                     _listOfPowerUPs.Remove(powerUP);
                     break;
                 }
+
+                if (powerUP.Rectangle.Top >= _graphicsDevice.Viewport.Height)
+                {
+                    _listOfPowerUPs.Remove(powerUP);
+                    break;
+                }                
             }
         }
 
@@ -259,7 +247,6 @@ namespace Arkanoid.States
         {
             return (Math.PI / 180) * angle;
         }
-
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
@@ -288,25 +275,15 @@ namespace Arkanoid.States
             spriteBatch.DrawString(_font, "Score", new Vector2(370, 28), Color.Red, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
 
             if (_score > 9999)
-            {
                 spriteBatch.DrawString(_font, _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else if (_score > 999)
-            {
                 spriteBatch.DrawString(_font, "0" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else if (_score > 99)
-            {
                 spriteBatch.DrawString(_font, "00" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else if (_score > 9)
-            {
                 spriteBatch.DrawString(_font, "000" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else
-            {
                 spriteBatch.DrawString(_font, "0000" + _score.ToString(), new Vector2(370, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
         }
 
         private void DrawLifeCounter(SpriteBatch spriteBatch)
@@ -314,17 +291,11 @@ namespace Arkanoid.States
             spriteBatch.DrawString(_font, "1UP", new Vector2(90, 28), Color.Red, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
 
             if (_lifeCounter > 99)
-            {
                 spriteBatch.DrawString(_font, _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else if (_lifeCounter > 9)
-            {
                 spriteBatch.DrawString(_font, "0" + _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
             else
-            {
                 spriteBatch.DrawString(_font, "00" + _lifeCounter.ToString(), new Vector2(90, 50), Color.White, (float)0.0, new Vector2(0, 0), (float)1.5, SpriteEffects.None, 1);
-            }
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -332,26 +303,59 @@ namespace Arkanoid.States
             //TODO: Delete sprites if they're not needed
         }
 
+        private void readLevelFromFile(StreamReader file)
+        {
+            string line;
+            string[] lineDevided;
+            char splitter = (char)59;
+            int positionX = 20; //+40 each ; and reset after new line;
+            int positionY = 180; //+20 each line
+
+            while ((line = file.ReadLine()) != null)
+            {
+                positionX = 20;
+                lineDevided = line.Split(splitter);
+
+                for(int i = 0; i < lineDevided.Length; i++)
+                {
+                    if (Int32.Parse(lineDevided[i]) != 0)
+                    {
+                        var block = new Block(_blockTexture, Int32.Parse(lineDevided[i]))
+                        { Position = new Vector2(positionX, positionY) };
+                        _listOfBlocks.Add(block);
+                    }
+                    positionX += 40;
+                }                
+                positionY += 20;
+            }
+
+            file.Close();
+        }
+
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _components)
-                component.Update(gameTime);
+            for(int i = 0; i < 10 ; i++)
+            {
+                foreach (var component in _components)
+                    component.Update(gameTime);
 
-            foreach (Ball ball in _listOfBalls)
-                ball.Update(gameTime);
+                foreach (Ball ball in _listOfBalls)
+                    ball.Update(gameTime);
 
-            foreach (Block block in _listOfBlocks)
-                block.Update(gameTime);
+                foreach (Block block in _listOfBlocks)
+                    block.Update(gameTime);
 
-            foreach (PowerUP powerUP in _listOfPowerUPs)
-                powerUP.Update(gameTime);
+                foreach (PowerUP powerUP in _listOfPowerUPs)
+                    powerUP.Update(gameTime);
 
-            CheckIfBallsCollideWithPaddle();
-            CheckIfBallsCollideWithAnyBlock();
-            CheckBalls();
-            CheckPowerUPs();
-            CheckIfGameOver();
-            CheckIfGameIsWon();
+                CheckIfBallsCollideWithPaddle();
+                CheckIfBallsCollideWithAnyBlock();
+                CheckBalls();
+                CheckPowerUPs();
+                CheckIfGameOver();
+                CheckIfGameIsWon();
+            }
+      
         }
         #endregion
     }

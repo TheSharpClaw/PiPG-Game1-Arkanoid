@@ -8,7 +8,7 @@ namespace Arkanoid.Objects
         #region Fields
         private bool _isGood;
         private Vector2 _position;
-        private double _speed;
+        private float _speed;
         private Type _state;
         private Texture2D _texture;
         #endregion
@@ -44,12 +44,12 @@ namespace Arkanoid.Objects
         #endregion
 
         #region Constructors
-        public PowerUP(Texture2D texture, Type state, int speed, bool isGood, Vector2 position)
+        public PowerUP(Texture2D texture, Type state, float speed, bool isGood, Vector2 position)
         {
             _isGood = isGood;
             _position = position;
             _state = state;
-            _speed = speed / 10;
+            _speed = speed / 100;
             _texture = texture;
         }
         #endregion
@@ -65,7 +65,7 @@ namespace Arkanoid.Objects
 
         public override void Update(GameTime gameTime)
         {
-            _position.Y = _position.Y + (float)_speed;
+            _position.Y = _position.Y + _speed;
         }
         #endregion
     }

@@ -3,6 +3,7 @@ using Arkanoid.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 
 namespace Arkanoid.States
 {
@@ -15,12 +16,18 @@ namespace Arkanoid.States
 
         private float _fontOpacity = 0;
         private float _fontOpacityFlag = 0;
+
+        private Song _victorySong;
         #endregion
 
         #region Contructors
         public VictoryState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int score)
            : base(game, graphicsDevice, content)
         {
+            _victorySong = _content.Load<Song>("SoundEffects/VictorySong");
+            MediaPlayer.Stop();
+            MediaPlayer.Play(_victorySong);
+
             _score = score;
 
             _font = _content.Load<SpriteFont>("Fonts/Font");
